@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian River Lagoon Fishing Guide</title>
+  </head>
+
+    <style>
+      
+      body {
+        background-color: rgb(106, 149, 146);
+        font-family: Arial;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .filters {
+        display: flex;
+        flex-direction: column; /* Display filters vertically */
+        max-width: 100%;
+ 
+}
+
+      .filters label,
+      .filters select {
+        margin-bottom: 10px; /* Add margin between filters */
+      }
+
+      .filter-group {
+        display: flex;
+        align-items: center; /* Align items vertically */
+      }
+
+      /* Adjust margin for better spacing */
+      .filters label {
+        display: inline-block; /* Change display to inline-block */
+        width: 120px; /* Set a fixed width for the labels */
+        margin-right: 10px;
+      }
+      .filters select {
+        width: calc(20% - 130px); /* Set the width of the select boxes to fill remaining space */
+      }
+
+
+      label {
+        font-weight: bold;
+      }
+
+      select {
+        padding: 8px;
+        font-size: 16px;
+      }
+
+      .fish-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .fish-box {
+        flex: 0 0 calc(50% - 20px); /* Set the flex basis to 50% minus margin */
+        margin-bottom: 20px;
+        margin-right: 20px; /* Add margin to create space between boxes */
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+        box-sizing: border-box; /* Include padding and border in the box's total width */
+        background-color: cornsilk;
+}
+
+      .fish-box:last-child {
+          margin-right: 0; /* Remove margin from the last box in a row */
+      }
+
+      .fish-content {
+        display: flex;
+        flex-direction: row; /* Keep the items in a row */
+        justify-content: space-between; /* Align items to the start and end of the container */
+        align-items: center; /* Center items vertically */
+}
+
+      .fish-info {
+        flex: 1;
+        font-size: 16px;
+      }
+
+    
+
+
+      .fish-box:nth-child(2n) {
+        margin-right: 0;
+}
+
+      .search-container {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+      }
+
+      .search-container input[type=text] {
+        padding: 6px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    /* Add styles for the search button if needed */
+      .search-container button {
+        padding: 6px 10px;
+        padding-left: 30px;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+     
+
+
+    </style>
+    
+  
+  <body>
+    <div class="container">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search by fish name...">
+      <h1>Indian River Fishing Guide</h1>
+      
+      <div class="filters">
+        <label for="season">Season:</label>
+        <select id="season">
+          <option value="All">All</option>
+          <option value="Spring">Spring</option>
+          <option value="Summer">Summer</option>
+          <option value="Fall">Fall</option>
+          <option value="Winter">Winter</option>
+        </select>
+  
+        <label for="bait">Bait:</label>
+        <select id="bait">
+          <option value="All">All Baits</option>
+          <option value="Live Shrimp">Live Shrimp</option>
+          <option value="Frozen Shrimp">Frozen Shrimp</option>
+          <option value="Cut bait">Cut Bait</option>
+          <option value="Live Pinfish">Live Pinfish</option>
+          <option value="Bread">Bread</option>
+          <option value="Castnet">Castnet</option>
+          <option value="Fly Fishing">Fly Fishing</option>
+        </select>
+  
+        <label for="gameBait">Game/Bait:</label>
+        <select id="gameBait">
+          <option value="All">Game or Bait</option>
+          <option value="Game">Game</option>
+          <option value="Bait">Bait</option>
+        </select>
+  
+        <label for="targeting">Targeting:</label>
+        <select id="targeting">
+          <option value="All">All Targeting Methods</option>
+          <option value="Spot Fishing">Spot Fishing</option>
+          <option value="Structures">Structures</option>
+          <option value="Mangroves">Mangroves</option>
+          <option value="Jetties">Jetties</option>
+          <option value="Fast Flowing Water">Fast Flowing Water</option>
+          <option value="Shore Fishing">Shore Fishing</option>
+          <option value="Near Crab Traps">Near Crab Traps</option>
+          <option value="Deep Water">Deep Water</option>
+          <option value="Night Fishing">Night Fishing</option>
+        </select>
+
+        <label for="size">Size:</label>
+        <select id="size">
+          <option value="All">All Sizes</option>
+          <option value="Very Small">Very Small</option>
+          <option value="Small">Small</option>
+          <option value="Medium">Medium</option>
+          <option value="Large">Large</option>
+          <option value="Very Large">Very Large</option>
+        </select>
+      </div>
+
+      <div id="fish-container" class="fish-container">
+        <!-- Fish will be displayed here -->
+      </div>
+    </div>
+
+    
+    
+    <script>
+     
+     //fish data
+     const fishData = [
+      {name: 'Redfish', altName: 'Red Drum, Channel Bass', scientificName: 'Sciaenops ocellatus', season: 'Summer, Fall', keeperSize: 'Catch and release', bait: 'Cut bait', line: '20-30lb', targeting: 'Spot Fishing', gameBait: 'Game', size: 'Medium', image: 'images/redfish.jpg'},
+
+      {name: 'Speckled Trout', altName: 'Spotted Seatrout, Gator Trout', scientificName: 'Cynoscion nebulosus', season: 'Year-round (closed Nov-Dec)', keeperSize: '15-19in', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Spot Fishing', gameBait: 'Game', size: 'Medium', image: 'images/speckled_trout.jpg'},
+
+      {name: 'Tarpon', altName: 'Silver King', scientificName: 'Megalops', season: 'Spring, Summer', keeperSize: 'Catch and release', bait: 'Cut bait', line: '50-60lb', targeting: 'Jetties', gameBait: 'Game', size: 'Large', image: 'images/tarpon.jpg'},
+
+      {name: 'Snook', altName: 'Robalo, Linesider', scientificName: 'Centropomus undecimalis', season: 'Spring, Summer (closed Dec-Jan and June-August)', keeperSize: '28-32in', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Fast Flowing Water', gameBait: 'Game', size: 'Medium', image: 'images/snook.jpg'},
+
+      {name: 'Crevalle Jack', altName: 'Common Jack, Black-Tailed Trevally', scientificName: 'Caranx hippos', season: 'Spring, Summer', keeperSize: 'Any', bait: 'Live Shrimp', line: '30-40lb', targeting: 'Spot Fishing', gameBait: 'Game', size: 'Large', image: 'images/crevalle_jack.jpg'},
+
+      {name: 'Pompano', altName: 'N/A', scientificName: 'Trachinotus', season: 'Fall, Winter', keeperSize: '11in+', bait: 'Live Shrimp', line: '20-30lb', targeting: 'Shore Fishing', gameBait: 'Game', size: 'Small', image: 'images/pompano.jpg'},
+
+      {name: 'Black Drum', altName: 'Drum, Drummer', scientificName: 'Pogonias cromis', season: 'Year-round', keeperSize: '14-24in', bait: 'Live Shrimp', line: '10-40lb', targeting: 'Mangroves', gameBait: 'Game', size: 'Small, Medium, Large', image: 'images/black_drum.jpg'},
+
+      {name: 'Sheepshead', altName: 'Convict Fish', scientificName: 'Archosargus probatocephalus', season: 'Winter, Spring', keeperSize: '12in+', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Mangroves, Structures', gameBait: 'Game', size: 'Small, Medium', image: 'images/sheepshead.jpg'},
+
+      {name: 'Tripletail', altName: 'N/A', scientificName: 'Lobotes surinamensis', season: 'Spring, Summer, Fall', keeperSize: '10-20lb', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Spot Fishing, Near Crab Traps', gameBait: 'Game', size: 'Medium', image: 'images/tripletail.jpg'},
+
+      {name: 'Mangrove Snapper', altName: 'Gray Snapper', scientificName: 'Lutjanus griseus', season: 'Spring, Summer', keeperSize: '10in+', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Mangroves, Structures', gameBait: 'Game', size: 'Small', image: 'images/mangrove_snapper.jpg'},
+
+      {name: 'Red Snapper', altName: 'N/A', scientificName: 'Lutjanus campechanus', season: 'Summer, Fall', keeperSize: '20in+', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Structures, Mangroves', gameBait: 'Game', size: 'Small, Medium', image: 'images/red_snapper.jpg'},
+
+      {name: 'Gag Grouper', altName: 'Velvet Rockfish, Gag, Charcoal Belly', scientificName: 'Mycteroperca microlepis', season: 'Currently Closed', keeperSize: 'N/A', bait: 'Live Pinfish', line: '40-80lb', targeting: 'Deep Water, Structures', gameBait: 'Game', size: 'Large', image: 'images/gag_grouper.jpg'},
+
+      {name: 'Needlefish', altName: 'Long toms', scientificName: 'Belonidae', season: 'Year-round', keeperSize: 'Any', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Night Fishing', gameBait: 'Bait', size: 'Small', image: 'images/needlefish.jpg'},
+
+      {name: 'Southern Flounder', altName: 'N/A', scientificName: 'Paralichthys lethostigma', season: 'Spring, Fall (closed Oct 15-Nov 30)', keeperSize: '14in+', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Structures', gameBait: 'Game', size: 'Small', image: 'images/southern_flounder.jpg'},
+
+      {name: 'Checkered Pufferfish', altName: 'N/A', scientificName: 'Sphoeroides testudineus', season: 'Spring, Summer, Fall', keeperSize: 'Catch and release', bait: 'Frozen Shrimp', line: '10-20lb', targeting: 'Structures, Mangroves', gameBait: 'Game', size: 'Small', image: 'images/checkered_pufferfish.jpg'},
+
+      {name: 'Burrfish', altName: 'Striped Burrfish', scientificName: 'Chilomycterus schoepfi', season: 'Spring, Summer, Fall', keeperSize: 'Catch and release', bait: 'Frozen Shrimp', line: '10-20lb', targeting: 'Structures, Mangroves', gameBait: 'Game', size: 'Small', image: 'images/burrfish.jpg'},
+
+      {name: 'Lady Fish', altName: 'Skipjack, Jack-rash, Tenpounder', scientificName: 'Elopidae', season: 'Spring, Summer', keeperSize: 'Any', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Deep Water, Night Fishing', gameBait: 'Game, Bait', size: 'Small, Medium', image: 'images/ladyfish.jpg'},
+
+      {name: 'Hardhead Catfish', altName: 'Sea Catfish, Tourist Trout', scientificName: 'Ariopsis felis', season: 'Spring, Summer, Fall', keeperSize: 'Any', bait: 'Frozen Shrimp, Bread', line: '10-20lb', targeting: 'Structures, Mangroves', gameBait: 'Game', size: 'Small, Medium', image: 'images/hardhead_catfish.jpg'},
+
+      {name: 'Pinfish', altName: 'Sea Bream, Pin Perch, Sand Perch', scientificName: 'Lagodon rhomboides', season: 'Spring, Summer, Fall', keeperSize: 'Any', bait: 'Frozen Shrimp', line: '10-20lb', targeting: 'Structures', gameBait: 'Bait', size: 'Very Small', image: 'images/pinfish.jpg'},
+
+      {name: 'Atlantic Croaker', altName: 'Hardhead, Pinhead', scientificName: 'Micropogonias', season: 'Summer, Fall', keeperSize: 'Any', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Structures, Night Fishing, Shore Fishing', gameBait: 'Game, Bait', size: 'Small', image: 'images/atlantic_croaker.jpg'},
+
+      {name: 'Spot Fish', altName: 'Spot Croaker, Norfolk Spot, Virginia Spot', scientificName: 'Leiostomus xanthurus', season: 'Summer, Fall', keeperSize: 'Any', bait: 'Frozen Shrimp', line: '10-20lb', targeting: 'Structures, Mangroves', gameBait: 'Bait', size: 'Very Small', image: 'images/spot.jpg'},
+
+      {name: 'Atlantic Bumper', altName: 'N/A', scientificName: 'Chloroscombrus chrysurus', season: 'Spring, Summer', keeperSize: 'Any', bait: 'Frozen Shrimp', line: '10-20lb', targeting: 'Structures, Mangroves', gameBait: 'Game, Bait', size: 'Very Small', image: 'images/atlantic_bumper.jpg'},
+
+      {name: 'Mullet', altName: 'Striped Mullet, Haarder, Springer', scientificName: 'Mugilidae', season: 'Fall', keeperSize: '11in+', bait: 'Castnet, Fly Fishing, Bread', line: '10-20lb', targeting: 'Deep Water, Spot Fishing', gameBait: 'Bait', size: 'Small', image: 'images/mullet.jpg'},
+
+      {name: 'Whiting', altName: 'Gulf Kingfish', scientificName: 'Menticirrhus littoralis', season: 'Year-round', keeperSize: 'Any', bait: 'Live Shrimp', line: '10-20lb', targeting: 'Structures, Shore Fishing', gameBait: 'Bait', size: 'Small', image: 'images/whiting.jpg'},
+
+      {name: 'Bull Shark', altName: 'River Shark, Freshwater Whaler', scientificName: 'Carcharhinus leucas', season: 'Year-round', keeperSize: '54in+', bait: 'Cut bait', line: '80-120lb', targeting: 'Structures, Deep Water', gameBait: 'Game', size: 'Very Large', image: 'images/bullshark.jpg'},
+
+      {name: 'Great White Shark', altName: 'White Shark, White Pointer', scientificName: 'Carcharodon carcharias', season: 'Summer', keeperSize: '54in+', bait: 'Cut bait', line: '480lb', targeting: 'Deep Water', gameBait: 'Game', size: 'Very Large', image: 'images/great_white_shark.jpg'}
+     ]
+
+    //filter fish by selected qualities
+    function filterFish() {
+    const selectedSeason = document.getElementById('season').value;
+    const selectedBait = document.getElementById('bait').value;
+    const selectedGameBait = document.getElementById('gameBait').value;
+    const selectedTargeting = document.getElementById('targeting').value;
+    const selectedSize = document.getElementById('size').value;
+
+    console.log("Selected Season:", selectedSeason);
+    console.log("Selected Bait:", selectedBait);
+    console.log("Selected Game/Bait:", selectedGameBait);
+    console.log("Selected Targeting:", selectedTargeting);
+    console.log("Selected Size:", selectedSize);
+
+    const filteredFish = fishData.filter(fish => (
+        (selectedSeason === 'All' || fish.season.includes(selectedSeason)) &&
+        (selectedBait === 'All' || fish.bait.includes(selectedBait)) &&
+        (selectedGameBait === 'All' || fish.gameBait.includes(selectedGameBait)) &&
+        (selectedTargeting === 'All' || fish.targeting.includes(selectedTargeting)) &&
+        (selectedSize === 'All' || fish.size.includes(selectedSize))
+    ));
+
+    console.log("Filtered Fish:", filteredFish);
+  
+    displayFish(filteredFish);
+      }
+
+      //display filtered fish
+      function displayFish(filteredFish) {
+        const fishContainer = document.getElementById('fish-container');
+    fishContainer.innerHTML = '';
+
+    filteredFish.forEach(fish => {
+        const fishBox = document.createElement('div');
+        fishBox.classList.add('fish-box');
+
+        const fishContent = document.createElement('div');
+        fishContent.classList.add('fish-content');
+
+        const fishInfo = document.createElement('div');
+        fishInfo.classList.add('fish-info');
+        // Constructing the fish information as separate paragraphs
+        const infoParagraphs = `
+            <p><strong>Name:</strong> ${fish.name}</p>
+            <p><strong>Alt Names:</strong> ${fish.altName}</p>
+            <p><strong>Scientific Name:</strong> ${fish.scientificName}</p>
+            <p><strong>Season:</strong> ${fish.season}</p>
+            <p><strong>Keeper Size:</strong> ${fish.keeperSize}</p>
+            <p><strong>Bait:</strong> ${fish.bait}</p>
+            <p><strong>Line:</strong> ${fish.line}</p>
+            <p><strong>Targeting:</strong> ${fish.targeting}</p>
+            <p><strong>Game/Bait:</strong> ${fish.gameBait}</p>
+            <p><strong>Size:</strong> ${fish.size}</p>
+        `;
+        fishInfo.innerHTML = infoParagraphs;
+
+        const imageElement = document.createElement('img');
+        imageElement.src = fish.image;
+        imageElement.alt = fish.name;
+        imageElement.style.width = '400px'; // Set the width to your desired size
+        imageElement.style.height = '300px'; // Maintain aspect ratio
+
+        fishContent.appendChild(fishInfo);
+        fishContent.appendChild(imageElement);
+
+        fishBox.appendChild(fishContent);
+        fishContainer.appendChild(fishBox);
+        });
+      }
+
+      //event listeners for filter changes
+      document.getElementById('season').addEventListener('change', filterFish);
+      document.getElementById('bait').addEventListener('change', filterFish);
+      document.getElementById('gameBait').addEventListener('change', filterFish);
+      document.getElementById('targeting').addEventListener('change', filterFish);
+      document.getElementById('size').addEventListener('change', filterFish);
+
+      //initial display of all fish
+      displayFish(fishData);
+
+      document.getElementById('searchInput').addEventListener('input', function() {
+  const searchValue = this.value.toLowerCase(); // Get the lowercase value of the search input
+  const filteredFish = fishData.filter(fish => fish.name.toLowerCase().includes(searchValue)); // Filter fish based on the search value
+  
+  displayFish(filteredFish); // Display filtered fish
+});
+
+    </script>
+  
+</body>
+</html>
